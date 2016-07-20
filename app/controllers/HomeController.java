@@ -103,9 +103,6 @@ public class HomeController extends Controller {
         }catch (Exception e){
             return internalServerError("Oops");
         }
-
-        // System.out.println(params.get("userRuleCost"));
-
         return ok("用户最终消费:"+cost);
     }
 
