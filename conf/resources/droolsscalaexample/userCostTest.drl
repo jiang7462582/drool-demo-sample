@@ -1,0 +1,52 @@
+package rules;
+
+import cn.bmkp.jiang.droolscost.User;
+import java.util.Date
+import java.time.LocalTime;
+
+
+global Long times;
+
+rule baseCost
+    when
+        $user:User(distance<=3,waitTime<=5)
+    then
+        $user.setCost(8.0);
+end
+
+rule LongDistance
+    when
+        $user:User(distance>3,waitTime<=5);
+    then
+        $user.setCost(8.0+($user.distance-3)*1.5);
+end
+
+rule waitCost
+    when
+        $user:User(distance<3,waitTime<5)
+    then
+        $user.setCost(8.0+($user.waitTime-5)*0.1);
+end
+
+rule LongDistancLongWaitTime
+    when
+        $user:User(distance>3,waitTime>5)
+    then
+        $user.setCost(8.0+($user.distance-3)*1.5+($user.waitTime-5)*0.1);
+end
+
+rule busyTime
+    when
+        //isBusy()
+        eval(isBusy())
+        $user:User()
+    then
+        $user.setCost($user.getCost()*2);
+end
+
+function Boolean isBusy() {
+    LocalTime time = LocalTime.now();
+    int hour = time.getHour();
+    return (hour<20&&hour>9) ? true : false;
+
+}
