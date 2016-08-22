@@ -1,7 +1,10 @@
 package controllers;
 
+import cn.bmkp.jiang.droolscost.Car;
+import cn.bmkp.jiang.droolscost.Person;
 import cn.bmkp.jiang.droolscost.User;
 import modles.GetKie;
+import modles.KieSessionFactoryStream;
 import modles.UserCostRule;
 import org.kie.api.runtime.KieSession;
 import play.mvc.*;
@@ -29,6 +32,10 @@ public class HomeController extends Controller {
 
     @Inject
     GetKie kie;
+
+    @Inject
+    KieSessionFactoryStream ks;
+
 
     /**
      * An action that renders an HTML page with a welcome message.
@@ -128,17 +135,49 @@ public class HomeController extends Controller {
         JsonNode rb = request().body().asJson();
         Long distance = rb.get("distance").asLong();
         Long waitTime = rb.get("waitTime").asLong();
-        KieSession kieSession = kie.getKieSession();
-        User user = new User();
-        user.setDistance(distance);
-        user.setWaitTime(waitTime);
-        kieSession.insert(user);
-        kieSession.fireAllRules();
-        Double cost = user.getCost();
+        try {
+
+            //KieSession kieSession = kie.getKieSession();
+//            KieSession kieSession = KieSessionFactoryStream.getKieSession();
+            KieSession kieSession = ks.getKieSession();
+
+            User user = new User();
+            user.setDistance(distance);
+            user.setWaitTime(waitTime);
+
+            Person p = new Person(50,2);
+            Car c = new Car(2,1);
+
+            kieSession.insert(c);
+            kieSession.insert(user);
+            kieSession.insert(p);
 
 
-        return ok("testCost:"+cost);
+
+
+            kieSession.fireAllRules();
+            Double cost = user.getCost();
+            Integer i = p.getType();
+
+            Integer price = c.getPrice();
+
+
+
+
+            return ok("testCost:"+cost+" PersonType:"+i+" CarPrice:"+price);
+        }catch (Exception e){
+            return ok("未获取到规则文件");
+        }
+
+
     }
+
+    public Result refresh(){
+
+        ks.refresh();
+        return ok("刷新成功");
+    }
+
 
 
 

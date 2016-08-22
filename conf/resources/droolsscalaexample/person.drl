@@ -1,0 +1,18 @@
+package rules;
+
+import cn.bmkp.jiang.droolscost.Person
+
+
+rule judgeyoung
+    when
+        p:Person(age<20)
+    then
+        p.setType(1);
+end
+
+rule judgeold
+    when
+        p:Person(age>=20)
+    then
+        p.setType(0);
+end

@@ -10,6 +10,7 @@ import org.kie.api.runtime.KieSession;
 
 import java.io.InputStream;
 
+
 /**
  * Created by jiang on 16/8/18.
  */
@@ -18,22 +19,29 @@ public class GetKie {
     private static KieSession kieSession = null;
 
     private static String URL = "http://localhost:8080/kie-drools/maven2/cn/bmkp/jiang/droolsCost/1.0/droolsCost-1.0.jar";
+    //private static String URL = "http://localhost:8080/kie-drools/maven2";
+
 
     private static void init(){
         try {
             KieServices ks = KieServices.Factory.get();
             KieRepository kr = ks.getRepository();
             UrlResource urlResource = (UrlResource) ks.getResources().newUrlResource(URL);
-            ReleaseIdImpl releaseId = new ReleaseIdImpl("cn.bmkp.jiang", "droolsCost", "1.0");
+
             urlResource.setUsername("admin");
             urlResource.setPassword("123456");
             urlResource.setBasicAuthentication("enabled");
+
+            ReleaseIdImpl releaseId = new ReleaseIdImpl("cn.bmkp.jiang", "droolsCost", "1.0");
+
             InputStream is = urlResource.getInputStream();
             KieModule kModule = kr.addKieModule(ks.getResources().newInputStreamResource(is));
+
             KieContainer kContainer = ks.newKieContainer(kModule.getReleaseId());
+//            KieContainer kContainer = ks.newKieContainer(releaseId);
             GetKie.kieSession = kContainer.newKieSession();
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
     public KieSession getKieSession(){

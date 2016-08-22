@@ -55,7 +55,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONValue;
 import java.util.*;
-import cn.bmkp.jiang.droolscost.User;
+import models.User;
 
 function JSONArray toJsonTest(){
     String s="[0,{\"1\":{\"2\":{\"3\":{\"4\":[5,{\"6\":7}]}}}}]";
